@@ -1,0 +1,88 @@
+name: do-app-starter
+region: nyc
+
+# Database provisioning - PostgreSQL
+databases:
+  - name: app-db
+    engine: PG
+    production: false
+    version: "15"
+
+# Services
+services:
+  - name: web
+    github:
+      repo: yourusername/do-app-starter
+      branch: main
+      deploy_on_push: true
+
+    # Build configuration
+    build_command: npm install
+
+    # Run configuration
+    run_command: npm start
+
+    # Environment variables
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        scope: RUN_AND_BUILD_TIME
+        type: SECRET
+      - key: SPACES_ENDPOINT
+        value: ${SPACES_ENDPOINT}
+      - key: SPACES_BUCKET
+        value: ${SPACES_BUCKET}
+      - key: SPACES_KEY
+        value: ${SPACES_KEY}
+        type: SECRET
+      - key: SPACES_SECRET
+        value: ${SPACES_SECRET}
+        type: SECRET
+
+    # Health check
+    health_check:
+      http_path: /health
+
+    # HTTP configuration
+    http_port: 8080
+
+    # Instance configuration
+    instance_count: 1
+    instance_size_slug: basic-xxs
+
+    # Auto-scaling (optional)
+    # autoscaling:
+    #   min_instance_count: 1
+    #   max_instance_count: 3
+
+# Static sites (if needed)
+# static_sites:
+#   - name: frontend
+#     github:
+#       repo: yourusername/do-app-starter
+#       branch: main
+#       deploy_on_push: true
+#     build_command: npm run build
+#     output_dir: /dist
+
+# Workers (background jobs - optional)
+# workers:
+#   - name: background-worker
+#     github:
+#       repo: yourusername/do-app-starter
+#       branch: main
+#       deploy_on_push: true
+#     build_command: npm install
+#     run_command: npm run worker
+
+# Jobs (scheduled tasks - optional)
+# jobs:
+#   - name: daily-cleanup
+#     github:
+#       repo: yourusername/do-app-starter
+#       branch: main
+#       deploy_on_push: true
+#     build_command: npm install
+#     run_command: npm run cleanup
+#     kind: PRE_DEPLOY
