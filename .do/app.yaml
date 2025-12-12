@@ -12,7 +12,7 @@ databases:
 services:
   - name: web
     github:
-      repo: yourusername/do-app-starter
+      repo: justinjilg/do-app-starter
       branch: main
       deploy_on_push: true
 
